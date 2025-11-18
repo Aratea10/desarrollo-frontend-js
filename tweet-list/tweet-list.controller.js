@@ -5,32 +5,37 @@ export async function tweetListController(tweetContainer) {
   let tweetsToShow = [];
 
   try {
-    const startEvent = new CustomEvent('start-fetching-tweets')
+    const startEvent = new CustomEvent("start-fetching-tweets");
     tweetContainer.dispatchEvent(startEvent);
-    tweetsToShow = await getTweets();    
+    tweetsToShow = await getTweets();
   } catch (error) {
-    alert(error.message)
+    const errorEvent = new CustomEvent("error-fetching-tweets", {
+      detail: {
+        message: error.message,
+        type: "error",
+      },
+    });
+    tweetContainer.dispatchEvent(errorEvent);
   } finally {
-    const finishEvent = new CustomEvent('finish-fetching-tweets')
+    const finishEvent = new CustomEvent("finish-fetching-tweets");
     tweetContainer.dispatchEvent(finishEvent);
   }
-  
+
   if (tweetsToShow.length === 0) {
-    tweetContainer.innerHTML = buildEmptyTweets()
+    tweetContainer.innerHTML = buildEmptyTweets();
   }
 
   tweetsToShow.forEach((tweet) => {
-
-    const newTweet = document.createElement('div');
+    const newTweet = document.createElement("div");
     // el controlador obtiene el HTML del módulo encargado de generar la vista.
-    newTweet.innerHTML = buildTweet(tweet)
+    newTweet.innerHTML = buildTweet(tweet);
 
-    newTweet.addEventListener('click', (event) => {
+    newTweet.addEventListener("click", (event) => {
       // newTweet.remove();
       event.currentTarget.remove();
-    })
+    });
 
     // añadir el tweet al DOM
-    tweetContainer.appendChild(newTweet)
-  })
+    tweetContainer.appendChild(newTweet);
+  });
 }
