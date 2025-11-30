@@ -2,7 +2,7 @@ import { loginUser } from "./login.model.js";
 import { constants } from "../utils/constants.js";
 
 export const loginController = (loginForm) => {
-  loginForm.addEventListener("submit", (event) => {
+  loginForm.addEventListener("submit", async (event) => {
     event.preventDefault();
     const errors = [];
 
@@ -25,7 +25,15 @@ export const loginController = (loginForm) => {
     });
 
     if (errors.length === 0) {
-      loginUser(email, password);
+      try {
+        const token = await loginUser(email, password);
+        localStorage.setItem("token", token);
+        setTimeout(() => {
+          window.location.href = "/";
+        }, 4000);
+      } catch (error) {
+        alert(error.message);
+      }
     }
   });
 };
