@@ -1,3 +1,5 @@
+import { tweetDetailController } from "./tweet-detail/tweet-detail.controller.js";
+
 const urlParams = window.location.search;
 
 const searchParams = new URLSearchParams(urlParams);
@@ -9,5 +11,7 @@ if (!tweetId) {
 }
 
 const h1 = document.querySelector("h1");
-
 h1.textContent = h1.textContent + ` ${tweetId}`;
+
+const tweetDetailContainer = document.querySelector("#tweetDetailContainer");
+tweetDetailController(tweetDetailContainer, tweetId);
